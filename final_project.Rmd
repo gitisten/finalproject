@@ -11,9 +11,272 @@ knitr::opts_chunk$set(echo = TRUE)
 library(shiny)
 ```
 
+# The dataset
+
+In this project I will work with the tidytuesday 2022-02-01 dataset named Dog Breeds.The data is consisted from various characteristics of different dog breeds. You can check the descriptions of the traits in the trait_description dataset. You can also find the explanation of the values there. Generally the higher value represents the presence of the characteristics in the dog breed from 1 to 5. The coat types and coat lenghts are described with words. On default they are all set to character type variables.   
+
+
+
+# Research question
+
+In this assignment I will set up a hierarchical regression model to predict the barking nature of the dogs. My research will focus on the behavioural predictors of this ability, therefoe my predictions will not be based on any of the fur based qualities. It seems logical for me that the classic defender qualities of dogs, like Watchdog/Protective Nature and Openness To strangers could heavily influence the barking level of dogs. I would like to investigate on which extend are the other dog personality characteristics taking part in this behaviour.    
+
+# Research method
+
+I will make two models and I will compare them based on accuracy which is better to predict the barking level of those animals. From the research i will exclude the fur based qualities.  
+
+
+
+
+
+```{r}
+library(readxl) 
+library(dplyr)
+library(ggplot2)
+library(ggrepel)
+
+
+breed_traits <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_traits.csv')
+trait_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/trait_description.csv')
+breed_rank_all <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_rank.csv')
+
+
+```
+
+## Exploratory data analysis
+### Data diagnostics and correcting coding errors
+
+
+Run an exploratory data analysis (EDA) to investigate the dataset. filter for most barking dogs with stranger openess and watchdog/protective nature. make shiny ggplot with their yearly ranks, 
+
+```{r}
+nrow(breed_traits) # We have 195 breeds.
+# First we filter out the fur based qualities
+breed_traits_filtered <- breed_traits %>%
+  select(-c("Shedding Level", "Coat Grooming Frequency", "Drooling Level", "Coat Type", "Coat Length"))
+
+# Now we set every data to numeric from character except Breed
+
+breed_traits_filtered <- breed_traits_filtered %>%
+  mutate(across(-Breed, as.numeric))
+
+str(breed_traits_filtered) # Checking if we were successful
+
+range(breed_traits_filtered$'Affectionate With Family') # Should be between 1-5, output indicates, there is some error in the data
+
+filtered_breeds <- breed_traits_filtered %>%
+  filter(`Affectionate With Family` < 1 | `Affectionate With Family` > 5) %>%  
+  select(Breed)
+range(breed_traits_filtered$'Affectionate With Family') # It is Plott Hounds
+
+breed_traits_filtered <- breed_traits_filtered %>%
+  filter(between(`Affectionate With Family`, 1, 5))
+
+range(breed_traits_filtered$'Affectionate With Family') # Should be between 1-5
+range(breed_traits_filtered$'Good With Young Children') # Should be between 1-5
+range(breed_traits_filtered$'Good With Other Dogs') # Should be between 1-5
+range(breed_traits_filtered$'Openness To Strangers') # Should be between 1-5
+range(breed_traits_filtered$'Playfulness Level') # Should be between 1-5
+range(breed_traits_filtered$'Watchdog/Protective Nature') # Should be between 1-5
+range(breed_traits_filtered$'Adaptability Level') # Should be between 1-5
+range(breed_traits_filtered$'Trainability Level') # Should be between 1-5
+range(breed_traits_filtered$'Energy Level') # Should be between 1-5
+range(breed_traits_filtered$'Barking Level') # Should be between 1-5
+range(breed_traits_filtered$'Mental Stimulation Needs') # Should be between 1-5
+range(breed_traits_filtered$'Affectionate With Family') # Should be between 1-5
+
+# Outputs are indicating, that there are no more coding errors, or missing data
+```
+
+### Making a scatter plot
+
+In this scatter plot you can observe the average barking levels for different dog breeds with their respective personalities. The number of observations are also highlighted.   
+
+```{r}
+breed_traits_summary <- breed_traits_filtered %>%
+  group_by(`Openness To Strangers`, `Watchdog/Protective Nature`) %>%
+  summarize(avg_Barking_Level = mean(`Barking Level`), num_breeds = n_distinct(Breed))
+
+ggplot(breed_traits_summary, aes(x = `Openness To Strangers`, y = `Watchdog/Protective Nature`, color = avg_Barking_Level, label = num_breeds)) +
+  geom_point() +
+  geom_text_repel(size = 3, nudge_x = 0.1, nudge_y = 0.1) +
+  labs(x = "Openness To Strangers", y = "Watchdog/Protective Nature", color = "Average Barking Level") +
+  scale_color_gradient(low = "blue", high = "red")
  
 
+ 
+```
+### Interactive ggplot, representing the relationship between the dogs nature and the Barking Level
 
+In this interactive plot you can set the Watchdog/Protective Nature and Openess To Strangers variables as you wish, to get the average Barking Level for those observations.Keep in mind, that there were unobserved combinations.  
+```{r}
+# Define the UI
+ui <- fluidPage(
+  titlePanel("Barking Level Analysis"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("watchdog", "Watchdog/Protective Nature:",
+                  min = 1, max = 5, value = 3),
+      sliderInput("openness", "Openness To Strangers:",
+                  min = 1, max = 5, value = 3)
+    ),
+    mainPanel(
+      plotOutput("barplot")
+    )
+  )
+)
+
+# Define the server logic
+server <- function(input, output) {
+  output$barplot <- renderPlot({
+    filtered_data <- breed_traits_filtered %>%
+      filter(`Watchdog/Protective Nature` == input$watchdog,
+             `Openness To Strangers` == input$openness) %>%
+      group_by(`Watchdog/Protective Nature`, `Openness To Strangers`) %>%
+      summarize(avg_Barking_Level = mean(`Barking Level`))
+
+    ggplot(filtered_data, aes(x = factor(`Watchdog/Protective Nature`), y = avg_Barking_Level, fill = factor(`Openness To Strangers`))) +
+      geom_bar(stat = "identity") +
+      labs(x = "Watchdog/Protective Nature", y = "Average Barking Level", fill = "Openness To Strangers") +
+      geom_text(aes(label = round(avg_Barking_Level, 2)), vjust = -0.5, size = 3) +
+      scale_y_continuous(limits = c(0, 5))
+  })
+}
+
+# Run the Shiny app
+shinyApp(ui = ui, server = server)
+ 
+
+ 
+```
+
+### Model diagnostics
+#### Build the more complex model
+
+In order to test the more complex model for outliers and to test the assumptions first build the model.
+
+```{r}
+
+
+```
+
+#### Checking for influential outliers
+
+Check for outlier values in the model.
+
+```{r}
+
+
+```
+
+#### Checking assumptions
+
+Check the normality assumption.
+
+```{r}
+
+```
+
+Check the linearity assumption.
+
+```{r}
+
+```
+
+Check the homoscedasticty assumption (homogeneity of variance).
+
+```{r}
+
+```
+
+Check the multicollinearity assumption.
+
+
+
+```{r}
+
+```
+
+### Making decision based on model diagnostics
+
+If based on the assumption tests you decide to drop a predictor variable you should do that here. Create your updated model.
+
+```{r}
+
+```
+
+#### Checking outliers of the updated model
+
+```{r}
+
+```
+
+#### Checking assumptions of the updated model
+
+Normality assumption
+
+```{r}
+
+```
+
+Linearity assumption
+
+```{r}
+
+```
+
+Homoscedasticty assumption (homogeneity of variance)
+
+```{r}
+
+```
+
+Multicollinearity assumption
+
+```{r}
+
+```
+
+## Model comparison
+
+Create the simple model and get the results of the model that needs to be reported based on the What to report section.
+
+```{r}
+
+```
+
+Create the more complex model based on the results of the model diagnostics. Also, get the results that needs to be reported based on the What to report section.
+
+```{r}
+
+```
+
+Compare the two models.
+
+```{r}
+
+```
+## Discussion
+
+Null Model:
+
+Adjusted R-squared:
+
+AIC:
+
+Complex Model
+
+Adjusted R-squared: 
+
+AIC: 
+
+Likelihood Ratio Test:
+
+F-statistic: 
+
+p-value: 
+
+Therefore...
 
 
 
