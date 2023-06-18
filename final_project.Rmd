@@ -106,6 +106,24 @@ ggplot(breed_traits_summary, aes(x = `Openness To Strangers`, y = `Watchdog/Prot
 
  
 ```
+### Making a bar plot
+
+In this bar plot you can observe the barking levels for every dog breeds.   
+
+```{r}
+# Count the number of breeds for each Barking Level category
+breed_counts <- breed_traits_filtered %>%
+  count(`Barking Level`)
+
+# Create a bar plot of breed counts by Barking Level
+ggplot(breed_counts, aes(x = factor(`Barking Level`), y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = "Barking Level", y = "Number of Breeds") +
+  geom_text(aes(label = n, y = n), vjust = -0.5, color = "orange", size = 3) +
+  scale_x_discrete(labels = c("1", "2", "3", "4", "5")) 
+  
+ 
+```
 ### Interactive ggplot, representing the relationship between the dogs nature and the Barking Level
 
 In this interactive plot you can set the Watchdog/Protective Nature and Openess To Strangers variables as you wish, to get the average Barking Level for those observations.Keep in mind, that there were unobserved combinations.  
@@ -242,7 +260,7 @@ Multicollinearity assumption
 Create the simple model and get the results of the model that needs to be reported based on the What to report section.
 
 ```{r}
-
+null_model <- lm('Barking Level'~ 'Watchdog/Protective Nature' + 'Openness To Strangers', data = breed_traits)
 ```
 
 Create the more complex model based on the results of the model diagnostics. Also, get the results that needs to be reported based on the What to report section.
