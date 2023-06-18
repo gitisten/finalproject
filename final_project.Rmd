@@ -34,7 +34,8 @@ library(readxl)
 library(dplyr)
 library(ggplot2)
 library(ggrepel)
-
+library(broom)
+library(car) # For vif
 
 breed_traits <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_traits.csv')
 trait_description <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/trait_description.csv')
@@ -108,7 +109,7 @@ ggplot(breed_traits_summary, aes(x = `Openness To Strangers`, y = `Watchdog/Prot
 ```
 ### Making a bar plot
 
-In this bar plot you can observe the barking levels for every dog breeds.   
+In this bar plot you can observe the barking levels for every dog breed.   
 
 ```{r}
 # Count the number of breeds for each Barking Level category
@@ -126,7 +127,7 @@ ggplot(breed_counts, aes(x = factor(`Barking Level`), y = n)) +
 ```
 ### Interactive ggplot, representing the relationship between the dogs nature and the Barking Level
 
-In this interactive plot you can set the Watchdog/Protective Nature and Openess To Strangers variables as you wish, to get the average Barking Level for those observations.Keep in mind, that there were unobserved combinations.  
+In this interactive plot you can set the Watchdog/Protective Nature and Openess To Strangers variables as you wish, to get the average Barking Level for those observations.Keep in mind, that there were unobserved combinations. (This part of the document interrupts the run all function in R)  
 ```{r}
 # Define the UI
 ui <- fluidPage(
@@ -171,20 +172,30 @@ shinyApp(ui = ui, server = server)
 ### Model diagnostics
 #### Build the more complex model
 
-In order to test the more complex model for outliers and to test the assumptions first build the model.
+In order to test the more complex model for outliers and to test the assumptions first we build the model.
 
 ```{r}
+complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits)
 
 
 ```
 
 #### Checking for influential outliers
 
-Check for outlier values in the model.
+Check for outlier values in the model. Over 1 cook's distance the drog breed would be considered an outlier.
 
 ```{r}
+# Set the default print options to show more columns
+options(dplyr.width = Inf)
 
 
+complex_model %>%
+  augment() %>%
+  select(`Openness To Strangers`, `Affectionate With Family`, `Good With Young Children`, `Playfulness Level`, `Adaptability Level`, `Trainability Level`, `Energy Level`, `Mental Stimulation Needs`, cooks.dist = .cooksd) %>%
+  arrange(desc(cooks.dist)) %>%
+  head(10)
+
+# As we can see every cook's distance value is well below zero, so we do not have outliers.
 ```
 
 #### Checking assumptions
@@ -192,68 +203,30 @@ Check for outlier values in the model.
 Check the normality assumption.
 
 ```{r}
-
+plot(complex_model, which = 2)
 ```
 
 Check the linearity assumption.
 
 ```{r}
-
+plot(complex_model, which = 1)
 ```
 
 Check the homoscedasticty assumption (homogeneity of variance).
 
 ```{r}
-
+plot(complex_model, which = 3) # It seems the variance of the Barking Level is middle heavy on the measuring scale
 ```
 
-Check the multicollinearity assumption.
+Checking the multicollinearity assumption. Over 5 VIF some variables are strongly correlated and we should reduce our model.
 
 
 
 ```{r}
-
+# Calculate VIF
+vif(complex_model) # Every one of our variables are well below zero, so we have encountered not high multicorrealianity in our model. Therefoe we will not drop any of our predictor from the more complex model.
 ```
 
-### Making decision based on model diagnostics
-
-If based on the assumption tests you decide to drop a predictor variable you should do that here. Create your updated model.
-
-```{r}
-
-```
-
-#### Checking outliers of the updated model
-
-```{r}
-
-```
-
-#### Checking assumptions of the updated model
-
-Normality assumption
-
-```{r}
-
-```
-
-Linearity assumption
-
-```{r}
-
-```
-
-Homoscedasticty assumption (homogeneity of variance)
-
-```{r}
-
-```
-
-Multicollinearity assumption
-
-```{r}
-
-```
 
 ## Model comparison
 
