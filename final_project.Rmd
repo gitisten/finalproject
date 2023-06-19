@@ -191,7 +191,7 @@ options(dplyr.width = Inf)
 
 complex_model %>%
   augment() %>%
-  select(`Openness To Strangers`, `Affectionate With Family`, `Good With Young Children`, `Playfulness Level`, `Adaptability Level`, `Trainability Level`, `Energy Level`, `Mental Stimulation Needs`, cooks.dist = .cooksd) %>%
+  select(`Watchdog/Protective Nature`,`Openness To Strangers`, `Affectionate With Family`, `Good With Young Children`, `Playfulness Level`, `Adaptability Level`, `Trainability Level`, `Energy Level`,`Good With Other Dogs`, `Mental Stimulation Needs`, cooks.dist = .cooksd) %>%
   arrange(desc(cooks.dist)) %>%
   head(10)
 
