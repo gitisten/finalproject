@@ -175,7 +175,7 @@ shinyApp(ui = ui, server = server)
 In order to test the more complex model for outliers and to test the assumptions first we build the model.
 
 ```{r}
-complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits)
+complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits_filtered)
 
 
 ```
@@ -224,7 +224,7 @@ Checking the multicollinearity assumption. Over 5 VIF some variables are strongl
 
 ```{r}
 # Calculate VIF
-vif(complex_model) # Every one of our variables are well below zero, so we have encountered not high multicorrealianity in our model. Therefoe we will not drop any of our predictor from the more complex model.
+vif(complex_model) # Every one of our variables are well below zero, so we have not encountered high multicorrealianity in our model. Therefore we will not drop any of our predictor from the more complex model.
 ```
 
 
@@ -233,11 +233,11 @@ vif(complex_model) # Every one of our variables are well below zero, so we have 
 Create the simple model and get the results of the model that needs to be reported based on the What to report section.
 
 ```{r}
-null_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers`, data = breed_traits)
+null_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers`, data = breed_traits_filtered)
 
 summary(null_model)
 
-glance(null_model) # Adjusted R squaired =  AIC = 
+glance(null_model) # Adjusted R squaired = 0.005549515 AIC = 590.5808
 ```
 
 Create the more complex model based on the results of the model diagnostics. Also, get the results that needs to be reported based on the What to report section.
@@ -245,37 +245,46 @@ Create the more complex model based on the results of the model diagnostics. Als
 ```{r}
 summary(complex_model)
 
-glance(complex_model) # Adjusted R squaired = AIC = 
+glance(complex_model) # Adjusted R squaired = 0.02654137	 AIC = 594.1411
 ```
 
-Compare the two models.
+Compare the two models. 
+
+The null model regression equation: Barking Level = 2.49358 + 0.02433 * Watchdog/Protective Nature + 0.15770 * Openness To Strangers
+
+
+The complex model regression equation: Barking Level = 0.994692 + 0.031533 * Watchdog/Protective Nature + 0.038626 * Openness To Strangers - 0.079730 * Affectionate With Family + 0.054527 * Good With Young Children - 0.007455 * Good With Other Dogs + 0.136785 * Playfulness Level + 0.264693 * Adaptability Level - 0.102140 * Trainability Level + 0.203117 * Energy Level + 0.052016 * Mental Stimulation Needs
+
+The coefficients are representing the estimated effect of each predictor variable on the response variable (Barking Level).
 
 ```{r}
-anova(null_model,complex_model) # F-statistic =  p-value = 
+anova(null_model,complex_model) # F-statistic = 1.5148 p-value = 0.1546
 ```
 ## Discussion
 
 Null Model:
 
-Adjusted R-squared:
+Adjusted R-squared: 0.005549515
 
-AIC:
+AIC: 590.5808
 
-Complex Model
+Complex Model:
 
-Adjusted R-squared: 
+Adjusted R-squared: 0.02654137	 AIC = 594.1411 
 
-AIC: 
+AIC:594.1411  
 
-Likelihood Ratio Test:
+F-statistic: 1.5148 
 
-F-statistic: 
+p-value: 0.1546 
 
-p-value: 
+In terms of explaining the variance in barking level's variability in the sample, the complex_model performs better compared to the null model as it has a higher Adjusted R-squared value. 
 
-Therefore...
+The likelihood ratio test involves comparing the log-likelihood values of the two models and evaluating the difference in AIC. The model with the lower AIC is considered to have a better fit. In this case it is the null model.
 
+The F-test is used to assess the overall significance of the additional predictors in model 2. In this case, with a p-value of 0.1546, we fail to reject the null hypothesis that the additional predictors have no effect on the response variable. This suggests that the additional predictors in model 2 do not significantly improve the model's fit compared to model 1.
 
+Although the complex model explains higher variability in the sample, the null model has lower AIC values, and the F-test indicates, that the additional predictors are not improving the null model in a statistically significant way. 2 test states from the 3, that the null model is better to predict the barking level of the dogs, therefore we would use the null model if we have to chose from those two model.   
 
 
 
