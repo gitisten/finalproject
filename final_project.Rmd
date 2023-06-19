@@ -19,11 +19,11 @@ In this project I will work with the tidytuesday 2022-02-01 dataset named Dog Br
 
 # Research question
 
-In this assignment I will set up a hierarchical regression model to predict the barking nature of the dogs. My research will focus on the behavioural predictors of this ability, therefoe my predictions will not be based on any of the fur based qualities. It seems logical for me that the classic defender qualities of dogs, like Watchdog/Protective Nature and Openness To strangers could heavily influence the barking level of dogs. I would like to investigate on which extend are the other dog personality characteristics taking part in this behaviour.    
+In this assignment I will set up a hierarchical regression model to predict the barking nature of the dogs. My research will focus on the behavioural predictors of this ability. It seems logical for me that interpesonal traits could influence the barking level of dogs. I would like to investigate on which extend are the dog personality characteristics taking part in this behaviour.    
 
 # Research method
 
-I will make two models and I will compare them based on accuracy which is better to predict the barking level of those animals. From the research i will exclude the fur based qualities.  
+After an explanatory data analysis I will make a model that will be reduced through feature engineering. I will make some explanatory data visualisation with the ggplot package. In the end I will compare the original and the reduced model based on AIC, adjusted R squared, and likelihood ratio test. From the research i will exclude the fur based qualities.  
 
 
 
@@ -88,26 +88,7 @@ range(breed_traits_filtered$'Affectionate With Family') # Should be between 1-5
 
 # Outputs are indicating, that there are no more coding errors, or missing data
 ```
-
-### Making a scatter plot
-
-In this scatter plot you can observe the average barking levels for different dog breeds with their respective personalities. The number of observations are also highlighted.   
-
-```{r}
-breed_traits_summary <- breed_traits_filtered %>%
-  group_by(`Openness To Strangers`, `Watchdog/Protective Nature`) %>%
-  summarize(avg_Barking_Level = mean(`Barking Level`), num_breeds = n_distinct(Breed))
-
-ggplot(breed_traits_summary, aes(x = `Openness To Strangers`, y = `Watchdog/Protective Nature`, color = avg_Barking_Level, label = num_breeds)) +
-  geom_point() +
-  geom_text_repel(size = 3, nudge_x = 0.1, nudge_y = 0.1) +
-  labs(x = "Openness To Strangers", y = "Watchdog/Protective Nature", color = "Average Barking Level") +
-  scale_color_gradient(low = "blue", high = "red")
- 
-
- 
-```
-### Making a bar plot
+### Making an exploratory bar plot
 
 In this bar plot you can observe the barking levels for every dog breed.   
 
@@ -125,18 +106,59 @@ ggplot(breed_counts, aes(x = factor(`Barking Level`), y = n)) +
   
  
 ```
+## Model building
+### Build the more complex model
+
+In order to test the more complex model for outliers and to test the assumptions first we build the model.
+
+```{r}
+complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits_filtered)
+
+
+```
+### Finding most singificant predictors
+
+In order to build the simpler model. We should run some model diagnostics to find the most relevant predictors.
+
+```{r}
+summary(complex_model) # As we can see Adaptability and Energy Level are the most significant predictors
+```
+### Build the simple model
+
+Through some feature engineering it was confirmed, Adaptability Level and Energy Level are statistically significant.
+```{r}
+simple_model <- lm(`Barking Level` ~ `Adaptability Level` + `Energy Level`, data = breed_traits_filtered)
+
+summary(simple_model)
+```
+## Exploratory plotting 
+### Making a scatter plot
+
+In this scatter plot you can observe the average barking levels for different dog breeds with their respective personalities according to their energy and adaptability levels. The number of observations are also highlighted.   
+
+```{r}
+breed_traits_summary <- breed_traits_filtered %>%
+  group_by(`Adaptability Level`, `Energy Level`) %>%
+  summarize(avg_Barking_Level = mean(`Barking Level`), num_breeds = n_distinct(Breed))
+
+ggplot(breed_traits_summary, aes(x = `Adaptability Level`, y = `Energy Level`, color = avg_Barking_Level, label = num_breeds)) +
+  geom_point() +
+  geom_text_repel(size = 3, nudge_x = 0.1, nudge_y = 0.1) +
+  labs(x = "Adaptability Level", y = "Energy Level", color = "Average Barking Level") +
+  scale_color_gradient(low = "blue", high = "red")
+```
 ### Interactive ggplot, representing the relationship between the dogs nature and the Barking Level
 
-In this interactive plot you can set the Watchdog/Protective Nature and Openess To Strangers variables as you wish, to get the average Barking Level for those observations.Keep in mind, that there were unobserved combinations. (This part of the document interrupts the run all function in R)  
+In this interactive plot you can set the Energy level and Adaptability level variables as you wish, to get the average Barking Level for those observations.Keep in mind, that there were unobserved combinations. (This part of the document interrupts the run all function in R)  
 ```{r}
 # Define the UI
 ui <- fluidPage(
   titlePanel("Barking Level Analysis"),
   sidebarLayout(
     sidebarPanel(
-      sliderInput("watchdog", "Watchdog/Protective Nature:",
+      sliderInput("energy", "Energy Level",
                   min = 1, max = 5, value = 3),
-      sliderInput("openness", "Openness To Strangers:",
+      sliderInput("adapt", "Adaptability Level:",
                   min = 1, max = 5, value = 3)
     ),
     mainPanel(
@@ -149,14 +171,14 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$barplot <- renderPlot({
     filtered_data <- breed_traits_filtered %>%
-      filter(`Watchdog/Protective Nature` == input$watchdog,
-             `Openness To Strangers` == input$openness) %>%
-      group_by(`Watchdog/Protective Nature`, `Openness To Strangers`) %>%
+      filter(`Energy Level` == input$energy,
+             `Adaptability Level` == input$adapt) %>%
+      group_by(`Energy Level`, `Adaptability Level`) %>%
       summarize(avg_Barking_Level = mean(`Barking Level`))
 
-    ggplot(filtered_data, aes(x = factor(`Watchdog/Protective Nature`), y = avg_Barking_Level, fill = factor(`Openness To Strangers`))) +
+    ggplot(filtered_data, aes(x = factor(`Energy Level`), y = avg_Barking_Level, fill = factor(`Adaptability Level`))) +
       geom_bar(stat = "identity") +
-      labs(x = "Watchdog/Protective Nature", y = "Average Barking Level", fill = "Openness To Strangers") +
+      labs(x = "Energy Level", y = "Average Barking Level", fill = "Adaptability Level") +
       geom_text(aes(label = round(avg_Barking_Level, 2)), vjust = -0.5, size = 3) +
       scale_y_continuous(limits = c(0, 5))
   })
@@ -170,19 +192,11 @@ shinyApp(ui = ui, server = server)
 ```
 
 ### Model diagnostics
-#### Build the more complex model
-
-In order to test the more complex model for outliers and to test the assumptions first we build the model.
-
-```{r}
-complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits_filtered)
 
 
-```
+#### Checking the complex model for influential outliers
 
-#### Checking for influential outliers
-
-Check for outlier values in the model. Over 1 cook's distance the drog breed would be considered an outlier.
+Check for outlier values in the complex model. Over 1 cook's distance the drog breed would be considered an outlier.
 
 ```{r}
 # Set the default print options to show more columns
@@ -195,11 +209,20 @@ complex_model %>%
   arrange(desc(cooks.dist)) %>%
   head(10)
 
-# As we can see every cook's distance value is well below zero, so we do not have outliers.
+# As we can see every cook's distance value is well below zero, so we do not have outliers in the complex model
 ```
+### Checking the simple model for influental outliers
+```{r}
+simple_model %>%
+  augment() %>%
+  select(`Adaptability Level`, `Energy Level`, cooks.dist = .cooksd) %>%
+  arrange(desc(cooks.dist)) %>%
+  head(10)
 
+# As we can see every cook's distance value is well below zero, so we do not have outliers in the simple model
+```
 #### Checking assumptions
-
+### Checking the complex model
 Check the normality assumption.
 
 ```{r}
@@ -220,24 +243,45 @@ plot(complex_model, which = 3) # It seems the variance of the Barking Level is m
 
 Checking the multicollinearity assumption. Over 5 VIF some variables are strongly correlated and we should reduce our model.
 
-
-
 ```{r}
 # Calculate VIF
 vif(complex_model) # Every one of our variables are well below zero, so we have not encountered high multicorrealianity in our model. Therefore we will not drop any of our predictor from the more complex model.
 ```
 
+### Checking the simple model
+Check the normality assumption.
+
+```{r}
+plot(simple_model, which = 2)
+```
+
+Check the linearity assumption.
+
+```{r}
+plot(simple_model, which = 1)
+```
+
+Check the homoscedasticty assumption (homogeneity of variance).
+
+```{r}
+plot(simple_model, which = 3) # It seems the variance of the Barking Level is middle heavy on the measuring scale
+```
+
+Checking the multicollinearity assumption. Over 5 VIF some variables are strongly correlated and we should reduce our model.
+
+```{r}
+# Calculate VIF
+vif(simple_model) # Every one of our variables are well below zero, so we have not encountered high multicorrealianity in our model. Therefore we will not drop any of our predictor from the more complex model.
+```
 
 ## Model comparison
 
 Create the simple model and get the results of the model that needs to be reported based on the What to report section.
 
 ```{r}
-null_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers`, data = breed_traits_filtered)
+summary(simple_model)
 
-summary(null_model)
-
-glance(null_model) # Adjusted R squaired = 0.005549515 AIC = 590.5808
+glance(simple_model) # Adjusted R squaired = 0.05314976	 AIC = 581.0652
 ```
 
 Create the more complex model based on the results of the model diagnostics. Also, get the results that needs to be reported based on the What to report section.
@@ -250,7 +294,7 @@ glance(complex_model) # Adjusted R squaired = 0.02654137	 AIC = 594.1411
 
 Compare the two models. 
 
-The null model regression equation: Barking Level = 2.49358 + 0.02433 * Watchdog/Protective Nature + 0.15770 * Openness To Strangers
+The null model regression equation: Barking Level = 1.1094 + 0.2914 * Adaptability Level + 0.2456 * Energy Level
 
 
 The complex model regression equation: Barking Level = 0.994692 + 0.031533 * Watchdog/Protective Nature + 0.038626 * Openness To Strangers - 0.079730 * Affectionate With Family + 0.054527 * Good With Young Children - 0.007455 * Good With Other Dogs + 0.136785 * Playfulness Level + 0.264693 * Adaptability Level - 0.102140 * Trainability Level + 0.203117 * Energy Level + 0.052016 * Mental Stimulation Needs
@@ -258,33 +302,39 @@ The complex model regression equation: Barking Level = 0.994692 + 0.031533 * Wat
 The coefficients are representing the estimated effect of each predictor variable on the response variable (Barking Level).
 
 ```{r}
-anova(null_model,complex_model) # F-statistic = 1.5148 p-value = 0.1546
+anova(simple_model,complex_model) # F-statistic = 0.3474 p-value = 0.9461
 ```
 ## Discussion
 
-Null Model:
+### AIC and adjusted R-squared tests
 
-Adjusted R-squared: 0.005549515
+#### Simple Model
 
-AIC: 590.5808
+Adjusted R-squared: 0.05314976
 
-Complex Model:
+AIC: 581.0652
+
+#### Complex Model
 
 Adjusted R-squared: 0.02654137	 AIC = 594.1411 
 
 AIC:594.1411  
 
-F-statistic: 1.5148 
+#### AIC and adjusted R-squared findings
 
-p-value: 0.1546 
+The Simple Model has a higher adjusted R-squared value (0.05314976) compared to the Complex Model (0.02654137). A higher adjusted R-squared indicates that a larger proportion of the variability in the dependent variable is accounted for by the predictors in the model. Therefore, the Simple Model explains more variability in the data than the Complex Model.
 
-In terms of explaining the variance in barking level's variability in the sample, the complex_model performs better compared to the null model as it has a higher Adjusted R-squared value. 
+The Simple Model has a lower AIC value (581.0652) compared to the Complex Model (594.1411). A lower AIC indicates a better balance between model fit and complexity. Therefore, the Simple Model is preferred over the Complex Model in terms of the AIC criterion.
 
-The likelihood ratio test involves comparing the log-likelihood values of the two models and evaluating the difference in AIC. The model with the lower AIC is considered to have a better fit. In this case it is the null model.
+### Likelihood ratio test
 
-The F-test is used to assess the overall significance of the additional predictors in model 2. In this case, with a p-value of 0.1546, we fail to reject the null hypothesis that the additional predictors have no effect on the response variable. This suggests that the additional predictors in model 2 do not significantly improve the model's fit compared to model 1.
+F-statistic: 0.3474
 
-Although the complex model explains higher variability in the sample, the null model has lower AIC values, and the F-test indicates, that the additional predictors are not improving the null model in a statistically significant way. 2 test states from the 3, that the null model is better to predict the barking level of the dogs, therefore we would use the null model if we have to chose from those two model.   
+p-value: 0.9461 
 
+The likelihood ratio test statistic (F) is 0.3474 with a p-value of 0.9461. This suggests that the additional predictors in the complex model do not significantly improve the model fit compared to the simple model.
 
+#### Final results
+
+Considering both the adjusted R-squared and AIC, the simple model seems to be the better choice. It explains a slightly higher proportion of the variability in the data and has a lower AIC, suggesting a better fit while being less complex compared to the complex model.
 
