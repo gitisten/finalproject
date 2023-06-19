@@ -233,19 +233,25 @@ vif(complex_model) # Every one of our variables are well below zero, so we have 
 Create the simple model and get the results of the model that needs to be reported based on the What to report section.
 
 ```{r}
-null_model <- lm('Barking Level'~ 'Watchdog/Protective Nature' + 'Openness To Strangers', data = breed_traits)
+null_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers`, data = breed_traits)
+
+summary(null_model)
+
+glance(null_model) # Adjusted R squaired =  AIC = 
 ```
 
 Create the more complex model based on the results of the model diagnostics. Also, get the results that needs to be reported based on the What to report section.
 
 ```{r}
+summary(complex_model)
 
+glance(complex_model) # Adjusted R squaired = AIC = 
 ```
 
 Compare the two models.
 
 ```{r}
-
+anova(null_model,complex_model) # F-statistic =  p-value = 
 ```
 ## Discussion
 
