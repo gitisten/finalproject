@@ -23,7 +23,7 @@ In this assignment I will set up a hierarchical regression model to predict the 
 
 # Research method
 
-After an explanatory data analysis I will make a model that will be reduced through feature engineering. I will make some explanatory data visualisation with the ggplot package. In the end I will compare the original and the reduced model based on AIC, adjusted R squared, and likelihood ratio test. From the research i will exclude the fur based qualities.  
+After an explanatory data analysis I will make a model that will be reduced through feature engineering. My intention is to find the model what is the best fit. I will make some explanatory data visualisation with the ggplot package. In the end I will compare the original and the reduced model based on AIC, adjusted R squared, and likelihood ratio test. From the research i will exclude the fur based qualities.  
 
 
 
@@ -47,8 +47,7 @@ breed_rank_all <- readr::read_csv('https://raw.githubusercontent.com/rfordatasci
 ## Exploratory data analysis
 ### Data diagnostics and correcting coding errors
 
-
-Run an exploratory data analysis (EDA) to investigate the dataset. filter for most barking dogs with stranger openess and watchdog/protective nature. make shiny ggplot with their yearly ranks, 
+In this section and exploratory data analysis will be made, and the coding errors would be corrected. We will exclude the fur based qualities from the dataset here. 
 
 ```{r}
 nrow(breed_traits) # We have 195 breeds.
@@ -109,7 +108,7 @@ ggplot(breed_counts, aes(x = factor(`Barking Level`), y = n)) +
 ## Model building
 ### Build the more complex model
 
-In order to test the more complex model for outliers and to test the assumptions first we build the model.
+In order to test the more complex model for outliers and to test the assumptions first we build the complex model.
 
 ```{r}
 complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits_filtered)
@@ -118,14 +117,15 @@ complex_model <- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness T
 ```
 ### Finding most singificant predictors
 
-In order to build the simpler model. We should run some model diagnostics to find the most relevant predictors.
+In order to build the more simple model. We should run some model diagnostics to find the most relevant predictors.
 
 ```{r}
 summary(complex_model) # As we can see Adaptability and Energy Level are the most significant predictors
 ```
 ### Build the simple model
 
-Through some feature engineering it was confirmed, Adaptability Level and Energy Level are statistically significant.
+Through some feature engineering it was confirmed, Adaptability Level and Energy Level are statistically significant. The p-values associated with those coefficients are 0.0212 and 0.0172, respectively. We have evidence to reject the null hypothesis and conclude that there is a statistically significant relationship between the "Adaptability Level" and "Energy Level" predictors and the dependent variable in the model. The researcher tried many more models, but according to testing statistics this was considered as the best fit. As a modeling method the least significant predictor was always dropped from the model till the solution was found which had only significant predictors. 
+
 ```{r}
 simple_model <- lm(`Barking Level` ~ `Adaptability Level` + `Energy Level`, data = breed_traits_filtered)
 
@@ -276,15 +276,16 @@ vif(simple_model) # Every one of our variables are well below zero, so we have n
 
 ## Model comparison
 
-Create the simple model and get the results of the model that needs to be reported based on the What to report section.
+In this section we will compare our starting model with our final model.
 
+### Statistics of the simple model
 ```{r}
 summary(simple_model)
 
 glance(simple_model) # Adjusted R squaired = 0.05314976	 AIC = 581.0652
 ```
+### Statistics of the complex model
 
-Create the more complex model based on the results of the model diagnostics. Also, get the results that needs to be reported based on the What to report section.
 
 ```{r}
 summary(complex_model)
@@ -292,7 +293,7 @@ summary(complex_model)
 glance(complex_model) # Adjusted R squaired = 0.02654137	 AIC = 594.1411
 ```
 
-Compare the two models. 
+### Regression equations 
 
 The null model regression equation: Barking Level = 1.1094 + 0.2914 * Adaptability Level + 0.2456 * Energy Level
 
@@ -304,7 +305,6 @@ The coefficients are representing the estimated effect of each predictor variabl
 ```{r}
 anova(simple_model,complex_model) # F-statistic = 0.3474 p-value = 0.9461
 ```
-## Discussion
 
 ### AIC and adjusted R-squared tests
 
