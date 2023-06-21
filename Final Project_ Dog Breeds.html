@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://127.0.0.1:4887/final_project.Rmd -->
+<html class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <script type="application/shiny-singletons"></script>
+  <script type="application/html-dependencies">jquery[3.6.0];shiny-css[1.7.4];shiny-javascript[1.7.4]</script>
+<script src="./Final Project_ Dog Breeds_files/jquery.min.js.download"></script>
+<link href="./Final Project_ Dog Breeds_files/shiny.min.css" rel="stylesheet">
+<script src="./Final Project_ Dog Breeds_files/shiny.min.js.download"></script>  <script src="./Final Project_ Dog Breeds_files/rmd_loader.js.download"></script>
+  <link href="./Final Project_ Dog Breeds_files/rmd_loader.css" rel="stylesheet">
+<script src="./Final Project_ Dog Breeds_files/header-attrs.js.download"></script><meta name="viewport" content="width=device-width, initial-scale=1"><link href="./Final Project_ Dog Breeds_files/bootstrap.min.css" rel="stylesheet" type="text/css"><script src="./Final Project_ Dog Breeds_files/bootstrap.min.js.download"></script><script src="./Final Project_ Dog Breeds_files/html5shiv.min.js.download"></script><script src="./Final Project_ Dog Breeds_files/respond.min.js.download"></script><style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style><script src="./Final Project_ Dog Breeds_files/tabsets.js.download"></script><link href="./Final Project_ Dog Breeds_files/default.css" rel="stylesheet" type="text/css"><script src="./Final Project_ Dog Breeds_files/highlight.js.download"></script><link href="./Final Project_ Dog Breeds_files/rmd_perf.css" rel="stylesheet" type="text/css"><script src="./Final Project_ Dog Breeds_files/rmd_perf.js.download"></script><meta name="rstudio_origin" content="127.0.0.1:34861"><script src="./Final Project_ Dog Breeds_files/rsiframe.js.download"></script>
+
+
+<meta name="generator" content="pandoc">
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+
+
+<meta name="author" content="Dávid Winkler">
+
+<meta name="date" content="2023-06-17">
+
+<title>Final Project: Dog Breeds</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+<script type="text/javascript" src="./Final Project_ Dog Breeds_files/MathJax.js.download"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+  <div>
+    <div data-display-if="!output.__reactivedoc__" data-ns-prefix="" style="display: none;">
+      <div id="rmd_loader_wrapper">
+        <div id="rmd_loader" style="">
+          <p>Please wait...</p>
+          <img src="./Final Project_ Dog Breeds_files/rmd_loader.gif">
+        </div>
+      </div>
+    </div>
+    <div id="__reactivedoc__" class="shiny-html-output shiny-bound-output" aria-live="polite">
+
+
+
+
+
+
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div id="section-header">
+
+
+
+<h1 class="title toc-ignore">Final Project: Dog Breeds</h1>
+<h4 class="author">Dávid Winkler</h4>
+<h4 class="date">2023-06-17</h4>
+
+</div>
+
+
+<div id="section-the-dataset" class="section level1">
+<h1>The dataset</h1>
+<p>In this project I will work with the tidytuesday 2022-02-01 dataset
+named Dog Breeds.The data is consisted from various characteristics of
+different dog breeds. You can check the descriptions of the traits in
+the trait_description dataset. You can also find the explanation of the
+values there. Generally the higher value represents the presence of the
+characteristics in the dog breed from 1 to 5. The coat types and coat
+lenghts are described with words. On default they are all set to
+character type variables.</p>
+</div>
+<div id="section-research-question" class="section level1">
+<h1>Research question</h1>
+<p>In this assignment I will set up a hierarchical regression model to
+predict the barking nature of the dogs. My research will focus on the
+behavioural predictors of this ability. It seems logical for me that
+interpesonal traits could influence the barking level of dogs. I would
+like to investigate on which extend are the dog personality
+characteristics taking part in this behaviour.</p>
+</div>
+<div id="section-research-method" class="section level1">
+<h1>Research method</h1>
+<p>After an explanatory data analysis I will make a model that will be
+reduced through feature engineering. My intention is to find the model
+what is the best fit. I will make some explanatory data visualisation
+with the ggplot package. In the end I will compare the original and the
+reduced model based on AIC, adjusted R squared, and likelihood ratio
+test. From the research i will exclude the fur based qualities.</p>
+<pre class="r"><code class="hljs"><span class="hljs-keyword">library</span>(readxl) 
+<span class="hljs-keyword">library</span>(dplyr)
+<span class="hljs-keyword">library</span>(ggplot2)
+<span class="hljs-keyword">library</span>(ggrepel)
+<span class="hljs-keyword">library</span>(broom)
+<span class="hljs-keyword">library</span>(car) <span class="hljs-comment"># For vif</span>
+
+breed_traits &lt;- readr::read_csv(<span class="hljs-string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_traits.csv'</span>)</code></pre>
+<pre><code class="hljs">## Rows: 195 Columns: 17
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr  (3): Breed, Coat Type, Coat Length
+## dbl (14): Affectionate With Family, Good With Young Children, Good With Othe...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code class="hljs">trait_description &lt;- readr::read_csv(<span class="hljs-string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/trait_description.csv'</span>)</code></pre>
+<pre><code class="hljs">## Rows: 16 Columns: 4
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (4): Trait, Trait_1, Trait_5, Description
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code class="hljs">breed_rank_all &lt;- readr::read_csv(<span class="hljs-string">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-02-01/breed_rank.csv'</span>)</code></pre>
+<pre><code class="hljs">## Rows: 195 Columns: 11
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (3): Breed, links, Image
+## dbl (8): 2013 Rank, 2014 Rank, 2015 Rank, 2016 Rank, 2017 Rank, 2018 Rank, 2...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div id="section-exploratory-data-analysis" class="section level2">
+<h2>Exploratory data analysis</h2>
+<div id="section-data-diagnostics-and-correcting-coding-errors" class="section level3">
+<h3>Data diagnostics and correcting coding errors</h3>
+<p>In this section and exploratory data analysis will be made, and the
+coding errors would be corrected. We will exclude the fur based
+qualities from the dataset here.</p>
+<pre class="r"><code class="hljs">nrow(breed_traits) <span class="hljs-comment"># We have 195 breeds.</span></code></pre>
+<pre><code class="hljs">## [1] 195</code></pre>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># First we filter out the fur based qualities</span>
+breed_traits_filtered &lt;- breed_traits %&gt;%
+  select(-c(<span class="hljs-string">"Shedding Level"</span>, <span class="hljs-string">"Coat Grooming Frequency"</span>, <span class="hljs-string">"Drooling Level"</span>, <span class="hljs-string">"Coat Type"</span>, <span class="hljs-string">"Coat Length"</span>))
+
+<span class="hljs-comment"># Now we set every data to numeric from character except Breed</span>
+
+breed_traits_filtered &lt;- breed_traits_filtered %&gt;%
+  mutate(across(-Breed, as.numeric))
+
+str(breed_traits_filtered) <span class="hljs-comment"># Checking if we were successful</span></code></pre>
+<pre><code class="hljs">## tibble [195 × 12] (S3: tbl_df/tbl/data.frame)
+##  $ Breed                     : chr [1:195] "Retrievers&nbsp;(Labrador)" "French&nbsp;Bulldogs" "German&nbsp;Shepherd&nbsp;Dogs" "Retrievers&nbsp;(Golden)" ...
+##  $ Affectionate With Family  : num [1:195] 5 5 5 5 4 5 3 5 5 5 ...
+##  $ Good With Young Children  : num [1:195] 5 5 5 5 3 5 5 3 5 3 ...
+##  $ Good With Other Dogs      : num [1:195] 5 4 3 5 3 3 5 3 4 4 ...
+##  $ Openness To Strangers     : num [1:195] 5 5 3 5 4 5 3 3 4 4 ...
+##  $ Playfulness Level         : num [1:195] 5 5 4 4 4 5 4 4 4 4 ...
+##  $ Watchdog/Protective Nature: num [1:195] 3 3 5 3 3 5 2 5 4 4 ...
+##  $ Adaptability Level        : num [1:195] 5 5 5 5 3 4 4 4 4 4 ...
+##  $ Trainability Level        : num [1:195] 5 4 5 5 4 5 3 5 5 4 ...
+##  $ Energy Level              : num [1:195] 5 3 5 3 3 4 4 3 5 3 ...
+##  $ Barking Level             : num [1:195] 3 1 3 1 2 4 4 1 3 5 ...
+##  $ Mental Stimulation Needs  : num [1:195] 4 3 5 4 3 5 4 5 5 3 ...</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Affectionate With Family'</span>) <span class="hljs-comment"># Should be between 1-5, output indicates, there is some error in the data</span></code></pre>
+<pre><code class="hljs">## [1] 0 5</code></pre>
+<pre class="r"><code class="hljs">filtered_breeds &lt;- breed_traits_filtered %&gt;%
+  filter(`Affectionate With Family` &lt; <span class="hljs-number">1</span> | `Affectionate With Family` &gt; <span class="hljs-number">5</span>) %&gt;%  
+  select(Breed)
+range(breed_traits_filtered$<span class="hljs-string">'Affectionate With Family'</span>) <span class="hljs-comment"># It is Plott Hounds</span></code></pre>
+<pre><code class="hljs">## [1] 0 5</code></pre>
+<pre class="r"><code class="hljs">breed_traits_filtered &lt;- breed_traits_filtered %&gt;%
+  filter(between(`Affectionate With Family`, <span class="hljs-number">1</span>, <span class="hljs-number">5</span>))
+
+range(breed_traits_filtered$<span class="hljs-string">'Affectionate With Family'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Good With Young Children'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Good With Other Dogs'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Openness To Strangers'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Playfulness Level'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 2 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Watchdog/Protective Nature'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Adaptability Level'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 3 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Trainability Level'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Energy Level'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 2 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Barking Level'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Mental Stimulation Needs'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 3 5</code></pre>
+<pre class="r"><code class="hljs">range(breed_traits_filtered$<span class="hljs-string">'Affectionate With Family'</span>) <span class="hljs-comment"># Should be between 1-5</span></code></pre>
+<pre><code class="hljs">## [1] 1 5</code></pre>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># Outputs are indicating, that there are no more coding errors, or missing data</span></code></pre>
+</div>
+<div id="section-making-an-exploratory-bar-plot" class="section level3">
+<h3>Making an exploratory bar plot</h3>
+<p>In this bar plot you can observe the barking levels for every dog
+breed.</p>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># Count the number of breeds for each Barking Level category</span>
+breed_counts &lt;- breed_traits_filtered %&gt;%
+  count(`Barking Level`)
+
+<span class="hljs-comment"># Create a bar plot of breed counts by Barking Level</span>
+ggplot(breed_counts, aes(x = factor(`Barking Level`), y = n)) +
+  geom_bar(stat = <span class="hljs-string">"identity"</span>, fill = <span class="hljs-string">"steelblue"</span>) +
+  labs(x = <span class="hljs-string">"Barking Level"</span>, y = <span class="hljs-string">"Number of Breeds"</span>) +
+  geom_text(aes(label = n, y = n), vjust = -<span class="hljs-number">0.5</span>, color = <span class="hljs-string">"orange"</span>, size = <span class="hljs-number">3</span>) +
+  scale_x_discrete(labels = c(<span class="hljs-string">"1"</span>, <span class="hljs-string">"2"</span>, <span class="hljs-string">"3"</span>, <span class="hljs-string">"4"</span>, <span class="hljs-string">"5"</span>)) </code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-3-1.pngg" width="672">
+## Model building ### Build the more complex model</p>
+<p>In order to test the more complex model for outliers and to test the
+assumptions first we build the complex model.</p>
+<pre class="r"><code class="hljs">complex_model &lt;- lm(`Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, data = breed_traits_filtered)</code></pre>
+</div>
+<div id="section-finding-most-singificant-predictors" class="section level3">
+<h3>Finding most singificant predictors</h3>
+<p>In order to build the more simple model. We should run some model
+diagnostics to find the most relevant predictors.</p>
+<pre class="r"><code class="hljs">summary(complex_model) <span class="hljs-comment"># As we can see Adaptability and Energy Level are the most significant predictors</span></code></pre>
+<pre><code class="hljs">## 
+## Call:
+## lm(formula = `Barking Level` ~ `Watchdog/Protective Nature` + 
+##     `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + 
+##     `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + 
+##     `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, 
+##     data = breed_traits_filtered)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.49081 -0.48711 -0.02573  0.51608  2.44280 
+## 
+## Coefficients:
+##                               Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                   0.994692   0.784202   1.268    0.206
+## `Watchdog/Protective Nature`  0.031533   0.098718   0.319    0.750
+## `Openness To Strangers`       0.038626   0.108445   0.356    0.722
+## `Affectionate With Family`   -0.079730   0.124360  -0.641    0.522
+## `Good With Young Children`    0.054527   0.092607   0.589    0.557
+## `Good With Other Dogs`       -0.007455   0.101394  -0.074    0.941
+## `Playfulness Level`           0.136785   0.153928   0.889    0.375
+## `Adaptability Level`          0.264693   0.172275   1.536    0.126
+## `Trainability Level`         -0.102140   0.106660  -0.958    0.340
+## `Energy Level`                0.203117   0.135774   1.496    0.136
+## `Mental Stimulation Needs`    0.052016   0.158560   0.328    0.743
+## 
+## Residual standard error: 1.083 on 183 degrees of freedom
+## Multiple R-squared:  0.07698,    Adjusted R-squared:  0.02654 
+## F-statistic: 1.526 on 10 and 183 DF,  p-value: 0.133</code></pre>
+</div>
+<div id="section-build-the-simple-model" class="section level3">
+<h3>Build the simple model</h3>
+<p>Through some feature engineering it was confirmed, Adaptability Level
+and Energy Level are statistically significant. The p-values associated
+with those coefficients are 0.0212 and 0.0172, respectively. We have
+evidence to reject the null hypothesis and conclude that there is a
+statistically significant relationship between the “Adaptability Level”
+and “Energy Level” predictors and the dependent variable in the model.
+The researcher tried many more models, but according to testing
+statistics this was considered as the best fit. As a modeling method the
+least significant predictor was always dropped from the model till the
+solution was found which had only significant predictors.</p>
+<pre class="r"><code class="hljs">simple_model &lt;- lm(`Barking Level` ~ `Adaptability Level` + `Energy Level`, data = breed_traits_filtered)
+
+summary(simple_model)</code></pre>
+<pre><code class="hljs">## 
+## Call:
+## lm(formula = `Barking Level` ~ `Adaptability Level` + `Energy Level`, 
+##     data = breed_traits_filtered)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.30313 -0.50306 -0.01176  0.74259  2.27961 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)            1.1094     0.5758   1.927   0.0555 .
+## `Adaptability Level`   0.2914     0.1254   2.323   0.0212 *
+## `Energy Level`         0.2456     0.1022   2.404   0.0172 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.068 on 191 degrees of freedom
+## Multiple R-squared:  0.06296,    Adjusted R-squared:  0.05315 
+## F-statistic: 6.417 on 2 and 191 DF,  p-value: 0.002008</code></pre>
+</div>
+</div>
+<div id="section-exploratory-plotting" class="section level2">
+<h2>Exploratory plotting</h2>
+<div id="section-making-a-scatter-plot" class="section level3">
+<h3>Making a scatter plot</h3>
+<p>In this scatter plot you can observe the average barking levels for
+different dog breeds with their respective personalities according to
+their energy and adaptability levels. The number of observations are
+also highlighted.</p>
+<pre class="r"><code class="hljs">breed_traits_summary &lt;- breed_traits_filtered %&gt;%
+  group_by(`Adaptability Level`, `Energy Level`) %&gt;%
+  summarize(avg_Barking_Level = mean(`Barking Level`), num_breeds = n_distinct(Breed))</code></pre>
+<pre><code class="hljs">## `summarise()` has grouped output by 'Adaptability Level'. You can override
+## using the `.groups` argument.</code></pre>
+<pre class="r"><code class="hljs">ggplot(breed_traits_summary, aes(x = `Adaptability Level`, y = `Energy Level`, color = avg_Barking_Level, label = num_breeds)) +
+  geom_point() +
+  geom_text_repel(size = <span class="hljs-number">3</span>, nudge_x = <span class="hljs-number">0.1</span>, nudge_y = <span class="hljs-number">0.1</span>) +
+  labs(x = <span class="hljs-string">"Adaptability Level"</span>, y = <span class="hljs-string">"Energy Level"</span>, color = <span class="hljs-string">"Average Barking Level"</span>) +
+  scale_color_gradient(low = <span class="hljs-string">"blue"</span>, high = <span class="hljs-string">"red"</span>)</code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-7-1.pngg" width="672">
+### Interactive ggplot, representing the relationship between the dogs
+nature and the Barking Level</p>
+<p>In this interactive plot you can set the Energy level and
+Adaptability level variables as you wish, to get the average Barking
+Level for those observations.Keep in mind, that there were unobserved
+combinations. (This part of the document interrupts the run all function
+in R)</p>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># Define the UI</span>
+ui &lt;- fluidPage(
+  titlePanel(<span class="hljs-string">"Barking Level Analysis"</span>),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput(<span class="hljs-string">"energy"</span>, <span class="hljs-string">"Energy Level"</span>,
+                  min = <span class="hljs-number">1</span>, max = <span class="hljs-number">5</span>, value = <span class="hljs-number">3</span>),
+      sliderInput(<span class="hljs-string">"adapt"</span>, <span class="hljs-string">"Adaptability Level:"</span>,
+                  min = <span class="hljs-number">1</span>, max = <span class="hljs-number">5</span>, value = <span class="hljs-number">3</span>)
+    ),
+    mainPanel(
+      plotOutput(<span class="hljs-string">"barplot"</span>)
+    )
+  )
+)
+
+<span class="hljs-comment"># Define the server logic</span>
+server &lt;- <span class="hljs-keyword">function</span>(input, output) {
+  output$barplot &lt;- renderPlot({
+    filtered_data &lt;- breed_traits_filtered %&gt;%
+      filter(`Energy Level` == input$energy,
+             `Adaptability Level` == input$adapt) %&gt;%
+      group_by(`Energy Level`, `Adaptability Level`) %&gt;%
+      summarize(avg_Barking_Level = mean(`Barking Level`))
+
+    ggplot(filtered_data, aes(x = factor(`Energy Level`), y = avg_Barking_Level, fill = factor(`Adaptability Level`))) +
+      geom_bar(stat = <span class="hljs-string">"identity"</span>) +
+      labs(x = <span class="hljs-string">"Energy Level"</span>, y = <span class="hljs-string">"Average Barking Level"</span>, fill = <span class="hljs-string">"Adaptability Level"</span>) +
+      geom_text(aes(label = round(avg_Barking_Level, <span class="hljs-number">2</span>)), vjust = -<span class="hljs-number">0.5</span>, size = <span class="hljs-number">3</span>) +
+      scale_y_continuous(limits = c(<span class="hljs-number">0</span>, <span class="hljs-number">5</span>))
+  })
+}
+
+<span class="hljs-comment"># Run the Shiny app</span>
+shinyApp(ui = ui, server = server)</code></pre>
+<iframe width="100%" height="400" class="shiny-frame" src="./Final Project_ Dog Breeds_files/saved_resource.html"></iframe>
+</div>
+<div id="section-model-diagnostics" class="section level3">
+<h3>Model diagnostics</h3>
+<div id="section-checking-the-complex-model-for-influential-outliers" class="section level4">
+<h4>Checking the complex model for influential outliers</h4>
+<p>Check for outlier values in the complex model. Over 1 cook’s distance
+the drog breed would be considered an outlier.</p>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># Set the default print options to show more columns</span>
+options(dplyr.width = <span class="hljs-literal">Inf</span>)
+
+
+complex_model %&gt;%
+  augment() %&gt;%
+  select(`Watchdog/Protective Nature`,`Openness To Strangers`, `Affectionate With Family`, `Good With Young Children`, `Playfulness Level`, `Adaptability Level`, `Trainability Level`, `Energy Level`,`Good With Other Dogs`, `Mental Stimulation Needs`, cooks.dist = .cooksd) %&gt;%
+  arrange(desc(cooks.dist)) %&gt;%
+  head(<span class="hljs-number">10</span>)</code></pre>
+<pre><code class="hljs">## # A tibble: 10 × 11
+##    `Watchdog/Protective Nature` `Openness To Strangers`
+##                           &lt;dbl&gt;                   &lt;dbl&gt;
+##  1                            5                       5
+##  2                            3                       3
+##  3                            3                       5
+##  4                            3                       5
+##  5                            3                       5
+##  6                            4                       2
+##  7                            5                       3
+##  8                            2                       3
+##  9                            3                       3
+## 10                            3                       3
+##    `Affectionate With Family` `Good With Young Children` `Playfulness Level`
+##                         &lt;dbl&gt;                      &lt;dbl&gt;               &lt;dbl&gt;
+##  1                          5                          5                   3
+##  2                          5                          3                   5
+##  3                          5                          5                   5
+##  4                          5                          5                   5
+##  5                          5                          5                   4
+##  6                          4                          1                   4
+##  7                          5                          3                   4
+##  8                          4                          3                   3
+##  9                          5                          5                   4
+## 10                          3                          3                   3
+##    `Adaptability Level` `Trainability Level` `Energy Level`
+##                   &lt;dbl&gt;                &lt;dbl&gt;          &lt;dbl&gt;
+##  1                    4                    3              3
+##  2                    4                    5              3
+##  3                    5                    4              3
+##  4                    5                    4              3
+##  5                    5                    5              3
+##  6                    4                    3              4
+##  7                    4                    5              3
+##  8                    3                    4              3
+##  9                    3                    3              4
+## 10                    3                    2              4
+##    `Good With Other Dogs` `Mental Stimulation Needs` cooks.dist
+##                     &lt;dbl&gt;                      &lt;dbl&gt;      &lt;dbl&gt;
+##  1                      5                          3     0.0402
+##  2                      3                          4     0.0365
+##  3                      4                          3     0.0353
+##  4                      4                          3     0.0353
+##  5                      5                          4     0.0308
+##  6                      3                          3     0.0305
+##  7                      3                          5     0.0273
+##  8                      3                          3     0.0271
+##  9                      5                          4     0.0269
+## 10                      3                          4     0.0266</code></pre>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># As we can see every cook's distance value is well below zero, so we do not have outliers in the complex model</span></code></pre>
+</div>
+</div>
+<div id="section-checking-the-simple-model-for-influental-outliers" class="section level3">
+<h3>Checking the simple model for influental outliers</h3>
+<pre class="r"><code class="hljs">simple_model %&gt;%
+  augment() %&gt;%
+  select(`Adaptability Level`, `Energy Level`, cooks.dist = .cooksd) %&gt;%
+  arrange(desc(cooks.dist)) %&gt;%
+  head(<span class="hljs-number">10</span>)</code></pre>
+<pre><code class="hljs">## # A tibble: 10 × 3
+##    `Adaptability Level` `Energy Level` cooks.dist
+##                   &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;
+##  1                    5              3     0.0544
+##  2                    5              3     0.0544
+##  3                    5              3     0.0544
+##  4                    3              5     0.0475
+##  5                    5              3     0.0296
+##  6                    3              2     0.0276
+##  7                    3              3     0.0270
+##  8                    3              3     0.0270
+##  9                    3              2     0.0258
+## 10                    3              4     0.0187</code></pre>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># As we can see every cook's distance value is well below zero, so we do not have outliers in the simple model</span></code></pre>
+<div id="section-checking-assumptions" class="section level4">
+<h4>Checking assumptions</h4>
+</div>
+</div>
+<div id="section-checking-the-complex-model" class="section level3">
+<h3>Checking the complex model</h3>
+<p>Check the normality assumption.</p>
+<pre class="r"><code class="hljs">plot(complex_model, which = <span class="hljs-number">2</span>)</code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-11-1.pngg" width="672"></p>
+<p>Check the linearity assumption.</p>
+<pre class="r"><code class="hljs">plot(complex_model, which = <span class="hljs-number">1</span>)</code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-12-1.pngg" width="672"></p>
+<p>Check the homoscedasticty assumption (homogeneity of variance).</p>
+<pre class="r"><code class="hljs">plot(complex_model, which = <span class="hljs-number">3</span>) <span class="hljs-comment"># It seems the variance of the Barking Level is middle heavy on the measuring scale</span></code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-13-1.pngg" width="672"></p>
+<p>Checking the multicollinearity assumption. Over 5 VIF some variables
+are strongly correlated and we should reduce our model.</p>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># Calculate VIF</span>
+vif(complex_model) <span class="hljs-comment"># Every one of our variables are well below zero, so we have not encountered high multicorrealianity in our model. Therefore we will not drop any of our predictor from the more complex model.</span></code></pre>
+<pre><code class="hljs">## `Watchdog/Protective Nature`      `Openness To Strangers` 
+##                     1.359391                     1.528769 
+##   `Affectionate With Family`   `Good With Young Children` 
+##                     1.641788                     1.400418 
+##       `Good With Other Dogs`          `Playfulness Level` 
+##                     1.475477                     1.902440 
+##         `Adaptability Level`         `Trainability Level` 
+##                     1.866429                     1.382450 
+##               `Energy Level`   `Mental Stimulation Needs` 
+##                     1.746572                     1.976226</code></pre>
+</div>
+<div id="section-checking-the-simple-model" class="section level3">
+<h3>Checking the simple model</h3>
+<p>Check the normality assumption.</p>
+<pre class="r"><code class="hljs">plot(simple_model, which = <span class="hljs-number">2</span>)</code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-15-1.pngg" width="672"></p>
+<p>Check the linearity assumption.</p>
+<pre class="r"><code class="hljs">plot(simple_model, which = <span class="hljs-number">1</span>)</code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-16-1.pngg" width="672"></p>
+<p>Check the homoscedasticty assumption (homogeneity of variance).</p>
+<pre class="r"><code class="hljs">plot(simple_model, which = <span class="hljs-number">3</span>) <span class="hljs-comment"># It seems the variance of the Barking Level is middle heavy on the measuring scale</span></code></pre>
+<p><img src="./Final Project_ Dog Breeds_files/unnamed-chunk-17-1.pngg" width="672"></p>
+<p>Checking the multicollinearity assumption. Over 5 VIF some variables
+are strongly correlated and we should reduce our model.</p>
+<pre class="r"><code class="hljs"><span class="hljs-comment"># Calculate VIF</span>
+vif(simple_model) <span class="hljs-comment"># Every one of our variables are well below zero, so we have not encountered high multicorrealianity in our model. Therefore we will not drop any of our predictor from the more complex model.</span></code></pre>
+<pre><code class="hljs">## `Adaptability Level`       `Energy Level` 
+##             1.016961             1.016961</code></pre>
+</div>
+</div>
+<div id="section-model-comparison" class="section level2">
+<h2>Model comparison</h2>
+<p>In this section we will compare our starting model with our final
+model.</p>
+<div id="section-statistics-of-the-simple-model" class="section level3">
+<h3>Statistics of the simple model</h3>
+<pre class="r"><code class="hljs">summary(simple_model)</code></pre>
+<pre><code class="hljs">## 
+## Call:
+## lm(formula = `Barking Level` ~ `Adaptability Level` + `Energy Level`, 
+##     data = breed_traits_filtered)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.30313 -0.50306 -0.01176  0.74259  2.27961 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)            1.1094     0.5758   1.927   0.0555 .
+## `Adaptability Level`   0.2914     0.1254   2.323   0.0212 *
+## `Energy Level`         0.2456     0.1022   2.404   0.0172 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.068 on 191 degrees of freedom
+## Multiple R-squared:  0.06296,    Adjusted R-squared:  0.05315 
+## F-statistic: 6.417 on 2 and 191 DF,  p-value: 0.002008</code></pre>
+<pre class="r"><code class="hljs">glance(simple_model) <span class="hljs-comment"># Adjusted R squaired = 0.05314976  AIC = 581.0652</span></code></pre>
+<pre><code class="hljs">## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    0.0630        0.0531  1.07      6.42 0.00201     2  -287.  581.  594.
+##   deviance df.residual  nobs
+##      &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1     218.         191   194</code></pre>
+</div>
+<div id="section-statistics-of-the-complex-model" class="section level3">
+<h3>Statistics of the complex model</h3>
+<pre class="r"><code class="hljs">summary(complex_model)</code></pre>
+<pre><code class="hljs">## 
+## Call:
+## lm(formula = `Barking Level` ~ `Watchdog/Protective Nature` + 
+##     `Openness To Strangers` + `Affectionate With Family` + `Good With Young Children` + 
+##     `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + 
+##     `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`, 
+##     data = breed_traits_filtered)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.49081 -0.48711 -0.02573  0.51608  2.44280 
+## 
+## Coefficients:
+##                               Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                   0.994692   0.784202   1.268    0.206
+## `Watchdog/Protective Nature`  0.031533   0.098718   0.319    0.750
+## `Openness To Strangers`       0.038626   0.108445   0.356    0.722
+## `Affectionate With Family`   -0.079730   0.124360  -0.641    0.522
+## `Good With Young Children`    0.054527   0.092607   0.589    0.557
+## `Good With Other Dogs`       -0.007455   0.101394  -0.074    0.941
+## `Playfulness Level`           0.136785   0.153928   0.889    0.375
+## `Adaptability Level`          0.264693   0.172275   1.536    0.126
+## `Trainability Level`         -0.102140   0.106660  -0.958    0.340
+## `Energy Level`                0.203117   0.135774   1.496    0.136
+## `Mental Stimulation Needs`    0.052016   0.158560   0.328    0.743
+## 
+## Residual standard error: 1.083 on 183 degrees of freedom
+## Multiple R-squared:  0.07698,    Adjusted R-squared:  0.02654 
+## F-statistic: 1.526 on 10 and 183 DF,  p-value: 0.133</code></pre>
+<pre class="r"><code class="hljs">glance(complex_model) <span class="hljs-comment"># Adjusted R squaired = 0.02654137     AIC = 594.1411</span></code></pre>
+<pre><code class="hljs">## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    0.0770        0.0265  1.08      1.53   0.133    10  -285.  594.  633.
+##   deviance df.residual  nobs
+##      &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1     215.         183   194</code></pre>
+</div>
+<div id="section-regression-equations" class="section level3">
+<h3>Regression equations</h3>
+<p>The null model regression equation: Barking Level = 1.1094 + 0.2914 *
+Adaptability Level + 0.2456 * Energy Level</p>
+<p>The complex model regression equation: Barking Level = 0.994692 +
+0.031533 * Watchdog/Protective Nature + 0.038626 * Openness To Strangers
+- 0.079730 * Affectionate With Family + 0.054527 * Good With Young
+Children - 0.007455 * Good With Other Dogs + 0.136785 * Playfulness
+Level + 0.264693 * Adaptability Level - 0.102140 * Trainability Level +
+0.203117 * Energy Level + 0.052016 * Mental Stimulation Needs</p>
+<p>The coefficients are representing the estimated effect of each
+predictor variable on the response variable (Barking Level).</p>
+<pre class="r"><code class="hljs">anova(simple_model,complex_model) <span class="hljs-comment"># F-statistic = 0.3474 p-value = 0.9461</span></code></pre>
+<pre><code class="hljs">## Analysis of Variance Table
+## 
+## Model 1: `Barking Level` ~ `Adaptability Level` + `Energy Level`
+## Model 2: `Barking Level` ~ `Watchdog/Protective Nature` + `Openness To Strangers` + 
+##     `Affectionate With Family` + `Good With Young Children` + 
+##     `Good With Other Dogs` + `Playfulness Level` + `Adaptability Level` + 
+##     `Trainability Level` + `Energy Level` + `Mental Stimulation Needs`
+##   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+## 1    191 217.88                           
+## 2    183 214.62  8    3.2594 0.3474 0.9461</code></pre>
+</div>
+<div id="section-aic-and-adjusted-r-squared-tests" class="section level3">
+<h3>AIC and adjusted R-squared tests</h3>
+<div id="section-simple-model" class="section level4">
+<h4>Simple Model</h4>
+<p>Adjusted R-squared: 0.05314976</p>
+<p>AIC: 581.0652</p>
+</div>
+<div id="section-complex-model" class="section level4">
+<h4>Complex Model</h4>
+<p>Adjusted R-squared: 0.02654137 AIC = 594.1411</p>
+<p>AIC:594.1411</p>
+</div>
+<div id="section-aic-and-adjusted-r-squared-findings" class="section level4">
+<h4>AIC and adjusted R-squared findings</h4>
+<p>The Simple Model has a higher adjusted R-squared value (0.05314976)
+compared to the Complex Model (0.02654137). A higher adjusted R-squared
+indicates that a larger proportion of the variability in the dependent
+variable is accounted for by the predictors in the model. Therefore, the
+Simple Model explains more variability in the data than the Complex
+Model.</p>
+<p>The Simple Model has a lower AIC value (581.0652) compared to the
+Complex Model (594.1411). A lower AIC indicates a better balance between
+model fit and complexity. Therefore, the Simple Model is preferred over
+the Complex Model in terms of the AIC criterion.</p>
+</div>
+</div>
+<div id="section-likelihood-ratio-test" class="section level3">
+<h3>Likelihood ratio test</h3>
+<p>F-statistic: 0.3474</p>
+<p>p-value: 0.9461</p>
+<p>The likelihood ratio test statistic (F) is 0.3474 with a p-value of
+0.9461. This suggests that the additional predictors in the complex
+model do not significantly improve the model fit compared to the simple
+model.</p>
+<div id="section-final-results" class="section level4">
+<h4>Final results</h4>
+<p>Considering both the adjusted R-squared and AIC, the simple model
+seems to be the better choice. It explains a slightly higher proportion
+of the variability in the data and has a lower AIC, suggesting a better
+fit while being less complex compared to the complex model.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("section-TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "mathjax-local/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+</div>
+  </div>
+
+
+</body></html>
